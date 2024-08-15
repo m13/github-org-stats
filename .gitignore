@@ -1,2 +1,7 @@
 node_modules/
+.idea/
+.DS_Store
 .env
+output.json
+output.csv
+example.json

@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@octokit/rest": "^17.3.0",
+    "@octokit/rest": "^20.1.1",
     "dotenv": "^8.2.0",
-    "json2csv": "^5.0.0"
+    "json2csv": "^5.0.0",
+    "uri-js": "^4.2.2"
   }
 }

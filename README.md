@@ -21,7 +21,7 @@ Remember, Github allows 5000 requests by hour.
 ### (4) Convert JSON to CSV easily.
 ```bash 
 $ npm install json2csv -g
-$ json2csv -i output.json -o json2csv.csv
+$ json2csv -i output.json -o output.csv
 ```
 
-### (5) Import json2csv.csv into Google Sheets to analyze properly
+### (5) Import output.csv into Google Sheets to analyze properly
