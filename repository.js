@@ -24,16 +24,18 @@ async function getLast3Contributors(repo) {
   };
 }
 
-async function hasCodeOwnerFile(repo) {
+async function getCodeOwnerFile(repo) {
   try {
     const response = await octokit.rest.repos.getContent({
       owner: process.env.GITHUB_ORG_NAME,
       repo: repo.name,
       path: '.github/CODEOWNERS',
     });
-    return (response.data.size > 0);
+    if (response.data.size > 0) {
+      return Buffer.from(response.data.content, 'base64').toString();
+    }
   } catch (error) {}
-  return false;
+  return '';
 }
 
 async function getDependabotInfo(repo) {
@@ -112,7 +114,8 @@ async function getTeams(repo) {
 
   const response = await octokit.rest.repos.listTeams({
     owner: process.env.GITHUB_ORG_NAME,
-    repo: repo.name
+    repo: repo.name,
+    per_page: 100
   });
 
   for (const team of response.data) {
@@ -133,7 +136,7 @@ const bufferWithAllEntries = [];
 
 async function main() {
 
-  const iterator = octokit.paginate.iterator(octokit.repos.listForOrg, {
+  const iterator = octokit.paginate.iterator(octokit.rest.repos.listForOrg, {
     org: process.env.GITHUB_ORG_NAME,
     per_page: 100,
     type: 'all'
@@ -144,14 +147,14 @@ async function main() {
       process.stdout.write(`${repo.name} `);
 
       const contributors = await getLast3Contributors(repo);
-      const hasCodeOwner = await hasCodeOwnerFile(repo);
+      const codeOwnerContent = await getCodeOwnerFile(repo);
       const dependabot = await getDependabotInfo(repo);
       const branch = await getBranchProtection(repo);
       const teams = await getTeams(repo);
 
       bufferWithAllEntries.push({
         name: repo.name,
-        url: `=HYPERLINK("https://github.com/moneytree/" & A${bufferWithAllEntries.length+2}, "url")`,
+        url: `=HYPERLINK("https://github.com/${process.env.GITHUB_ORG_NAME}/" & A${bufferWithAllEntries.length + 2}, "url")`,
         private: repo.private,
         archived: repo.archived,
         disabled: repo.disabled,
@@ -183,7 +186,7 @@ async function main() {
         user_2: contributors.second,
         user_3: contributors.third,
         // codeowner
-        has_codeowners: hasCodeOwner,
+        codeowners: codeOwnerContent,
         // dependabot
         depbot_total: dependabot.total,
         depbot_fixed: dependabot.fixed,
