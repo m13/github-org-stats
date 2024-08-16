@@ -147,14 +147,14 @@ async function main() {
       process.stdout.write(`${repo.name} `);
 
       const contributors = await getLast3Contributors(repo);
-      const CodeOwnerContent = await getCodeOwnerFile(repo);
+      const codeOwnerContent = await getCodeOwnerFile(repo);
       const dependabot = await getDependabotInfo(repo);
       const branch = await getBranchProtection(repo);
       const teams = await getTeams(repo);
 
       bufferWithAllEntries.push({
         name: repo.name,
-        url: `=HYPERLINK("https://github.com/moneytree/" & A${bufferWithAllEntries.length + 2}, "url")`,
+        url: `=HYPERLINK("https://github.com/${process.env.GITHUB_ORG_NAME}/" & A${bufferWithAllEntries.length + 2}, "url")`,
         private: repo.private,
         archived: repo.archived,
         disabled: repo.disabled,
@@ -186,7 +186,7 @@ async function main() {
         user_2: contributors.second,
         user_3: contributors.third,
         // codeowner
-        codeowners: CodeOwnerContent,
+        codeowners: codeOwnerContent,
         // dependabot
         depbot_total: dependabot.total,
         depbot_fixed: dependabot.fixed,
