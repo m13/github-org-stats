@@ -8,12 +8,13 @@ GITHUB_ORG_NAME=moneytree
 GITHUB_AUTH_TOKEN=XXX
 ```
 
-### (2) Add / Remove values from `index.js`
+### (2) Add / Remove values from `repository.js`
 
 ### (3) Execute. Download into `output.json`
 ```bash
 $ npm install
-$ node .
+$ node repository.js
+$ node team.js
 ```
 
 Remember, Github allows 5000 requests by hour.
